@@ -7,7 +7,7 @@ const supabase = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-// Inicializa o mapa
+// MAPA
 const map = L.map("map", { zoomControl: false })
   .setView([-15.793889, -47.882778], 4);
 
@@ -15,37 +15,49 @@ L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 ).addTo(map);
 
-// Formulário
+// FORM
 const form = document.getElementById("form");
 const titleInput = document.getElementById("title");
 const contentInput = document.getElementById("content");
 let clickedLatLng = null;
 
-// Load memórias do banco
+// 🔄 CARREGAR MEMÓRIAS
 loadMemories();
 
 async function loadMemories() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("memories")
     .select("*");
+
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   data.forEach(addMarker);
 }
 
-// Clique no mapa para abrir form
+// 📍 CLIQUE NO MAPA
 map.on("click", (e) => {
   clickedLatLng = e.latlng;
   form.style.display = "block";
 });
 
-// Salvar
+// 💾 SALVAR MEMÓRIA
 document.getElementById("save").onclick = async () => {
-  await supabase.from("memories").insert({
+  if (!clickedLatLng) return;
+
+  const { error } = await supabase.from("memories").insert({
     title: titleInput.value,
     content: contentInput.value,
     lat: clickedLatLng.lat,
     lng: clickedLatLng.lng,
   });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   addMarker({
     title: titleInput.value,
@@ -59,7 +71,7 @@ document.getElementById("save").onclick = async () => {
   contentInput.value = "";
 };
 
-// Função para adicionar marcador
+// 🕯️ MARCADOR
 function addMarker(memoria) {
   const marker = L.circleMarker(
     [memoria.lat, memoria.lng],
