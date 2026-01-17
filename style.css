@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0e0e0e;
+  color: #f2f2f2;
+  font-family: "Georgia", serif;
+}
+
+header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+header h1 {
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+header p {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Popup (card da história) */
+.leaflet-popup-content-wrapper {
+  background: #111;
+  color: #eee;
+  border-radius: 6px;
+}
+
+.leaflet-popup-tip {
+  background: #111;
+}
