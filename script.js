@@ -10,6 +10,11 @@ const supabase = window.supabase.createClient(
 // MAPA
 const map = L.map("map", { zoomControl: false })
   .setView([-15.793889, -47.882778], 4);
+  
+  // 🩹 Fix para iOS / GitHub Pages
+setTimeout(() => {
+  map.invalidateSize();
+}, 500);
 
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
