@@ -92,3 +92,9 @@ function addMarker(memoria) {
     <em>${memoria.content}</em>
   `);
 }
+
+document.addEventListener("touchstart", () => {
+  map.invalidateSize();
+}, { once: true });
+
+
