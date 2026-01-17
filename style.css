@@ -1,13 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  background: #0e0e0e;
-  color: #f2f2f2;
-  font-family: "Georgia", serif;
+  margin: 0;
+  background: #0b0b0b;
+  color: #eee;
+  font-family: Georgia, serif;
 }
 
 header {
@@ -18,13 +13,12 @@ header {
 }
 
 header h1 {
-  font-size: 28px;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
 }
 
 header p {
-  font-size: 14px;
-  opacity: 0.7;
+  font-size: 13px;
+  opacity: 0.6;
 }
 
 #map {
@@ -32,13 +26,32 @@ header p {
   height: 100vh;
 }
 
-/* Popup (card da história) */
-.leaflet-popup-content-wrapper {
+#form {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
   background: #111;
-  color: #eee;
+  padding: 12px;
+  width: 220px;
   border-radius: 6px;
+  display: none;
+  z-index: 1000;
 }
 
-.leaflet-popup-tip {
-  background: #111;
+#form input,
+#form textarea {
+  width: 100%;
+  background: #1a1a1a;
+  color: #eee;
+  border: none;
+  padding: 6px;
+  margin-bottom: 6px;
+}
+
+#form button {
+  width: 100%;
+  background: #ffd27d;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
 }
