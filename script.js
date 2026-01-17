@@ -1,32 +1,77 @@
+// ⚙️ Credenciais Supabase
+const SUPABASE_URL = "https://xcxjpbsdvyksklqeuofa.supabase.co";
+const SUPABASE_KEY = "sb_publishable_VQAfxI1bhLWSDVrxIv4lTw_sa5aWoDf";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 // Inicializa o mapa
-const map = L.map("map", {
-  zoomControl: false,
-}).setView([-15.793889, -47.882778], 4); // Brasil como início
+const map = L.map("map", { zoomControl: false })
+  .setView([-15.793889, -47.882778], 4);
 
-// Mapa escuro
-L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-  attribution: "&copy; OpenStreetMap",
-}).addTo(map);
+L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+).addTo(map);
 
-// Exemplo de ponto (primeira memória — pode ser a tua)
-const memoria = {
-  lat: -3.7319,
-  lng: -38.5267,
-  titulo: "Rua da minha infância",
-  texto: "Essa rua foi onde eu aprendi a andar de bicicleta. À noite, o poste iluminava pouco, mas era suficiente.",
+// Formulário
+const form = document.getElementById("form");
+const titleInput = document.getElementById("title");
+const contentInput = document.getElementById("content");
+let clickedLatLng = null;
+
+// Load memórias do banco
+loadMemories();
+
+async function loadMemories() {
+  const { data } = await supabase
+    .from("memories")
+    .select("*");
+
+  data.forEach(addMarker);
+}
+
+// Clique no mapa para abrir form
+map.on("click", (e) => {
+  clickedLatLng = e.latlng;
+  form.style.display = "block";
+});
+
+// Salvar
+document.getElementById("save").onclick = async () => {
+  await supabase.from("memories").insert({
+    title: titleInput.value,
+    content: contentInput.value,
+    lat: clickedLatLng.lat,
+    lng: clickedLatLng.lng,
+  });
+
+  addMarker({
+    title: titleInput.value,
+    content: contentInput.value,
+    lat: clickedLatLng.lat,
+    lng: clickedLatLng.lng,
+  });
+
+  form.style.display = "none";
+  titleInput.value = "";
+  contentInput.value = "";
 };
 
-// Marker suave
-const marker = L.circleMarker([memoria.lat, memoria.lng], {
-  radius: 6,
-  color: "#ffd27d",
-  fillColor: "#ffd27d",
-  fillOpacity: 0.8,
-}).addTo(map);
+// Função para adicionar marcador
+function addMarker(memoria) {
+  const marker = L.circleMarker(
+    [memoria.lat, memoria.lng],
+    {
+      radius: 6,
+      color: "#ffd27d",
+      fillOpacity: 0.8,
+    }
+  ).addTo(map);
 
-// Conteúdo do card
-marker.bindPopup(`
-  <strong>${memoria.titulo}</strong>
-  <br/><br/>
-  <em>${memoria.texto}</em>
-`);
+  marker.bindPopup(`
+    <strong>${memoria.title}</strong><br/><br/>
+    <em>${memoria.content}</em>
+  `);
+}
